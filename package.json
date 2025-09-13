@@ -6,7 +6,8 @@
   "devDependencies": {
     "@eddeee888/gcg-typescript-resolver-files": "^0.12.1",
     "@graphql-codegen/cli": "^6.0.0",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/mongoose": "^5.11.97"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -14,6 +15,7 @@
   "dependencies": {
     "graphql": "^16.11.0",
     "graphql-scalars": "^1.24.2",
-    "graphql-yoga": "^5.15.2"
+    "graphql-yoga": "^5.15.2",
+    "mongoose": "^8.18.1"
   }
 }
