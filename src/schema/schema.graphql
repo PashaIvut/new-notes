@@ -1,0 +1,36 @@
+type Query {
+  notes: [Note!]!
+  note(id: ID!): Note
+  folders: [Folder!]!
+  folder(id: ID!): Folder
+}
+
+type Mutation {
+  createNote(title: String!, content: String, folderId: ID): Note!
+  updateNote(id: ID!, title: String, content: String, folderId: ID): Note
+  deleteNote(id: ID!): Boolean!
+  createFolder(name: String!, parentId: ID): Folder!
+  updateFolder(id: ID!, name: String, parentId: ID): Folder
+  deleteFolder(id: ID!): Boolean!
+}
+
+type Note {
+  id: ID!
+  title: String!
+  content: String
+  folder: Folder
+  folderId: ID
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Folder {
+  id: ID!
+  name: String!
+  parent: Folder
+  parentId: ID
+  notes: [Note!]!
+  subfolders: [Folder!]!
+  createdAt: String!
+  updatedAt: String!
+}
