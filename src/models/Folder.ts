@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IFolder extends Document {
+  id: mongoose.Types.ObjectId;
   name: string;
   parent?: mongoose.Types.ObjectId | null;
   createdAt: Date;
