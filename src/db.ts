@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { config } from './config'
-import './models/Folder' // импортируем модели
+import './models/Folder' 
 import './models/Note'
 
 export async function connectDB() {
@@ -9,6 +9,5 @@ export async function connectDB() {
   console.log('[mongo] connected')
 }
 
-// Экспортируем модели для использования в резолверах
 export { Folder } from './models/Folder'
 export { Note } from './models/Note'
