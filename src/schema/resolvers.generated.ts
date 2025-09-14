@@ -16,7 +16,7 @@ import    { Note } from './resolvers/Note';
 export const resolvers: Resolvers = {
     Query: { folder: Query_folder,folders: Query_folders,note: Query_note,notes: Query_notes },
     Mutation: { createFolder: Mutation_createFolder,createNote: Mutation_createNote,deleteFolder: Mutation_deleteFolder,deleteNote: Mutation_deleteNote,updateFolder: Mutation_updateFolder,updateNote: Mutation_updateNote },
-
+      
     Folder: Folder,
     Note: Note,
 }

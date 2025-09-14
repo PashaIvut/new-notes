@@ -1,5 +1,4 @@
 type DeleteError {
-  __typename: String!
   error: DeleteErrorType!
 }
 
@@ -11,7 +10,6 @@ enum DeleteErrorType {
 union DeleteResult = DeleteError | DeleteSuccess
 
 type DeleteSuccess {
-  __typename: String!
   success: Boolean!
 }
 
@@ -27,7 +25,6 @@ type Folder {
 }
 
 type FolderError {
-  __typename: String!
   error: FolderErrorType!
 }
 
@@ -41,7 +38,6 @@ enum FolderErrorType {
 union FolderResult = FolderError | FolderSuccess
 
 type FolderSuccess {
-  __typename: String!
   folder: Folder!
 }
 
@@ -65,7 +61,6 @@ type Note {
 }
 
 type NoteError {
-  __typename: String!
   error: NoteErrorType!
 }
 
@@ -79,7 +74,6 @@ enum NoteErrorType {
 union NoteResult = NoteError | NoteSuccess
 
 type NoteSuccess {
-  __typename: String!
   note: Note!
 }
 

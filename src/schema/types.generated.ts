@@ -21,7 +21,6 @@ export type Scalars = {
 
 export type DeleteError = {
   __typename?: 'DeleteError';
-  __typename: Scalars['String']['output'];
   error: DeleteErrorType;
 };
 
@@ -33,7 +32,6 @@ export type DeleteResult = DeleteError | DeleteSuccess;
 
 export type DeleteSuccess = {
   __typename?: 'DeleteSuccess';
-  __typename: Scalars['String']['output'];
   success: Scalars['Boolean']['output'];
 };
 
@@ -51,7 +49,6 @@ export type Folder = {
 
 export type FolderError = {
   __typename?: 'FolderError';
-  __typename: Scalars['String']['output'];
   error: FolderErrorType;
 };
 
@@ -65,7 +62,6 @@ export type FolderResult = FolderError | FolderSuccess;
 
 export type FolderSuccess = {
   __typename?: 'FolderSuccess';
-  __typename: Scalars['String']['output'];
   folder: Folder;
 };
 
@@ -130,7 +126,6 @@ export type Note = {
 
 export type NoteError = {
   __typename?: 'NoteError';
-  __typename: Scalars['String']['output'];
   error: NoteErrorType;
 };
 
@@ -144,7 +139,6 @@ export type NoteResult = NoteError | NoteSuccess;
 
 export type NoteSuccess = {
   __typename?: 'NoteSuccess';
-  __typename: Scalars['String']['output'];
   note: Note;
 };
 
@@ -244,12 +238,12 @@ export type ResolversUnionTypes<_RefType extends Record<string, unknown>> = {
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   DeleteError: ResolverTypeWrapper<Omit<DeleteError, 'error'> & { error: ResolversTypes['DeleteErrorType'] }>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
   DeleteErrorType: ResolverTypeWrapper<'INVALID_ID' | 'NOT_FOUND'>;
   DeleteResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['DeleteResult']>;
   DeleteSuccess: ResolverTypeWrapper<DeleteSuccess>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Folder: ResolverTypeWrapper<FolderMapper>;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   FolderError: ResolverTypeWrapper<Omit<FolderError, 'error'> & { error: ResolversTypes['FolderErrorType'] }>;
   FolderErrorType: ResolverTypeWrapper<'INVALID_ID' | 'NOT_FOUND' | 'VALIDATION_ERROR' | 'DUPLICATE_NAME'>;
@@ -267,11 +261,11 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   DeleteError: DeleteError;
-  String: Scalars['String']['output'];
   DeleteResult: ResolversUnionTypes<ResolversParentTypes>['DeleteResult'];
   DeleteSuccess: DeleteSuccess;
   Boolean: Scalars['Boolean']['output'];
   Folder: FolderMapper;
+  String: Scalars['String']['output'];
   ID: Scalars['ID']['output'];
   FolderError: FolderError;
   FolderResult: ResolversUnionTypes<ResolversParentTypes>['FolderResult'];
@@ -285,7 +279,6 @@ export type ResolversParentTypes = {
 };
 
 export type DeleteErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteError'] = ResolversParentTypes['DeleteError']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   error?: Resolver<ResolversTypes['DeleteErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -297,7 +290,6 @@ export type DeleteResultResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type DeleteSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteSuccess'] = ResolversParentTypes['DeleteSuccess']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -315,7 +307,6 @@ export type FolderResolvers<ContextType = any, ParentType extends ResolversParen
 };
 
 export type FolderErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderError'] = ResolversParentTypes['FolderError']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   error?: Resolver<ResolversTypes['FolderErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -327,7 +318,6 @@ export type FolderResultResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type FolderSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderSuccess'] = ResolversParentTypes['FolderSuccess']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   folder?: Resolver<ResolversTypes['Folder'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -353,7 +343,6 @@ export type NoteResolvers<ContextType = any, ParentType extends ResolversParentT
 };
 
 export type NoteErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['NoteError'] = ResolversParentTypes['NoteError']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   error?: Resolver<ResolversTypes['NoteErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -365,7 +354,6 @@ export type NoteResultResolvers<ContextType = any, ParentType extends ResolversP
 };
 
 export type NoteSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['NoteSuccess'] = ResolversParentTypes['NoteSuccess']> = {
-  __typename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['Note'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
