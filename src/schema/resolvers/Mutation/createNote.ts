@@ -1,6 +1,6 @@
 // src/schema/resolvers/Mutation/createNote.ts
 import type { MutationResolvers } from './../../types.generated';
-import { Note } from '../../../db';
+import { Note, Folder } from '../../../db';
 import { mapNoteToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
