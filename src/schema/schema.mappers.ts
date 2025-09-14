@@ -1,7 +1,7 @@
 export interface FolderMapper {
     id: string;
     name: string;
-    parent?: string | null; 
+    parentId?: string | null; 
     createdAt: string;
     updatedAt: string;
   }
@@ -10,7 +10,7 @@ export interface FolderMapper {
     id: string;
     title: string;
     content?: string | null;
-    folder?: string | null; 
+    folderId?: string | null; 
     createdAt: string;
     updatedAt: string;
   }
