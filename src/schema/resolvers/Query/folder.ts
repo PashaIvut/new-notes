@@ -1,14 +1,28 @@
-
-import type   { QueryResolvers } from './../../types.generated';
+// src/schema/resolvers/Query/folder.ts
+import type { QueryResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
 import { mapFolderToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
-export const folder: NonNullable<QueryResolvers['folder']> = async (_parent, { id }, _ctx) => { 
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-                return null;
-        }
-
-        const folder = await Folder.findById(id);
-        return folder ? mapFolderToGraphQL(folder) : null;
- };
+export const folder: NonNullable<QueryResolvers['folder']> = async (_parent, { id }, _ctx) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return {
+      __typename: 'FolderError',
+      error: 'INVALID_ID'
+    };
+  }
+  
+  const folder = await Folder.findById(id);
+  
+  if (!folder) {
+    return {
+      __typename: 'FolderError',
+      error: 'NOT_FOUND'
+    };
+  }
+  
+  return {
+    __typename: 'FolderSuccess',
+    folder: mapFolderToGraphQL(folder)
+  };
+};

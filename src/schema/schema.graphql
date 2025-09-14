@@ -14,6 +14,58 @@ type Mutation {
   deleteFolder(id: ID!): DeleteResult!
 }
 
+# ===== UNION TYPES =====
+union FolderResult = FolderSuccess | FolderError
+union NoteResult = NoteSuccess | NoteError
+union DeleteResult = DeleteSuccess | DeleteError
+
+# ===== SUCCESS TYPES =====
+type FolderSuccess {
+  folder: Folder!
+}
+
+type NoteSuccess {
+  note: Note!
+}
+
+type DeleteSuccess {
+  success: Boolean!
+}
+
+# ===== ERROR TYPES =====
+type FolderError {
+  error: FolderErrorType!
+}
+
+type NoteError {
+  error: NoteErrorType!
+}
+
+type DeleteError {
+  error: DeleteErrorType!
+}
+
+# ===== ERROR ENUMS =====
+enum FolderErrorType {
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+  DUPLICATE_NAME
+}
+
+enum NoteErrorType {
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+  DUPLICATE_TITLE
+}
+
+enum DeleteErrorType {
+  INVALID_ID
+  NOT_FOUND
+}
+
+
 type Note {
   id: ID!
   title: String!
@@ -33,57 +85,4 @@ type Folder {
   subfolders: [Folder!]!
   createdAt: String!
   updatedAt: String!
-}
-
-union FolderResult = FolderSuccess | FolderError
-union NoteResult = NoteSuccess | NoteError
-union DeleteResult = DeleteSuccess | DeleteError
-
-type FolderSuccess {
-  __typename: String!
-  folder: Folder!
-}
-
-type NoteSuccess {
-  __typename: String!
-  note: Note!
-}
-
-type DeleteSuccess {
-  __typename: String!
-  success: Boolean!
-}
-
-type FolderError {
-  __typename: String!
-  error: FolderErrorType!
-}
-
-type NoteError {
-  __typename: String!
-  error: NoteErrorType!
-}
-
-type DeleteError {
-  __typename: String!
-  error: DeleteErrorType!
-}
-
-enum FolderErrorType {
-  INVALID_ID
-  NOT_FOUND
-  VALIDATION_ERROR
-  DUPLICATE_NAME
-}
-
-enum NoteErrorType {
-  INVALID_ID
-  NOT_FOUND
-  VALIDATION_ERROR
-  DUPLICATE_TITLE
-}
-
-enum DeleteErrorType {
-  INVALID_ID
-  NOT_FOUND
 }
