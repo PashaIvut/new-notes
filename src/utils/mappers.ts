@@ -1,5 +1,6 @@
 import type { IFolder } from '../models/Folder';
-import type { FolderMapper } from '../schema/schema.mappers';
+import type { INote } from '../models/Note';
+import type { FolderMapper, NoteMapper } from '../schema/schema.mappers';
 
 export function mapFolderToGraphQL(folder: IFolder): FolderMapper {
     return {
@@ -10,3 +11,14 @@ export function mapFolderToGraphQL(folder: IFolder): FolderMapper {
         updatedAt: folder.updatedAt.toISOString()
     }
 }
+
+export function mapNoteToGraphQL(note: INote): NoteMapper {
+    return {
+      id: note.id.toString(),
+      title: note.title,
+      content: note.content,
+      folderId: note.folder?.toString() || null,
+      createdAt: note.createdAt.toISOString(),
+      updatedAt: note.updatedAt.toISOString()
+    };
+  }
