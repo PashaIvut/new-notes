@@ -1,3 +1,20 @@
+type DeleteError {
+  __typename: String!
+  error: DeleteErrorType!
+}
+
+enum DeleteErrorType {
+  INVALID_ID
+  NOT_FOUND
+}
+
+union DeleteResult = DeleteError | DeleteSuccess
+
+type DeleteSuccess {
+  __typename: String!
+  success: Boolean!
+}
+
 type Folder {
   createdAt: String!
   id: ID!
@@ -9,13 +26,32 @@ type Folder {
   updatedAt: String!
 }
 
+type FolderError {
+  __typename: String!
+  error: FolderErrorType!
+}
+
+enum FolderErrorType {
+  DUPLICATE_NAME
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+}
+
+union FolderResult = FolderError | FolderSuccess
+
+type FolderSuccess {
+  __typename: String!
+  folder: Folder!
+}
+
 type Mutation {
-  createFolder(name: String!, parentId: ID): Folder!
-  createNote(content: String, folderId: ID, title: String!): Note!
-  deleteFolder(id: ID!): Boolean!
-  deleteNote(id: ID!): Boolean!
-  updateFolder(id: ID!, name: String, parentId: ID): Folder
-  updateNote(content: String, folderId: ID, id: ID!, title: String): Note
+  createFolder(name: String!, parentId: ID): FolderResult!
+  createNote(content: String, folderId: ID, title: String!): NoteResult!
+  deleteFolder(id: ID!): DeleteResult!
+  deleteNote(id: ID!): DeleteResult!
+  updateFolder(id: ID!, name: String, parentId: ID): FolderResult
+  updateNote(content: String, folderId: ID, id: ID!, title: String): NoteResult
 }
 
 type Note {
@@ -28,9 +64,28 @@ type Note {
   updatedAt: String!
 }
 
+type NoteError {
+  __typename: String!
+  error: NoteErrorType!
+}
+
+enum NoteErrorType {
+  DUPLICATE_TITLE
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+}
+
+union NoteResult = NoteError | NoteSuccess
+
+type NoteSuccess {
+  __typename: String!
+  note: Note!
+}
+
 type Query {
-  folder(id: ID!): Folder
+  folder(id: ID!): FolderResult
   folders: [Folder!]!
-  note(id: ID!): Note
+  note(id: ID!): NoteResult
   notes: [Note!]!
 }

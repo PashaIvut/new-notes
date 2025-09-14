@@ -1,17 +1,17 @@
 type Query {
   notes: [Note!]!
-  note(id: ID!): Note
+  note(id: ID!): NoteResult
   folders: [Folder!]!
-  folder(id: ID!): Folder
+  folder(id: ID!): FolderResult
 }
 
 type Mutation {
-  createNote(title: String!, content: String, folderId: ID): Note!
-  updateNote(id: ID!, title: String, content: String, folderId: ID): Note
-  deleteNote(id: ID!): Boolean!
-  createFolder(name: String!, parentId: ID): Folder!
-  updateFolder(id: ID!, name: String, parentId: ID): Folder
-  deleteFolder(id: ID!): Boolean!
+  createNote(title: String!, content: String, folderId: ID): NoteResult!
+  updateNote(id: ID!, title: String, content: String, folderId: ID): NoteResult
+  deleteNote(id: ID!): DeleteResult!
+  createFolder(name: String!, parentId: ID): FolderResult!
+  updateFolder(id: ID!, name: String, parentId: ID): FolderResult
+  deleteFolder(id: ID!): DeleteResult!
 }
 
 type Note {
@@ -33,4 +33,57 @@ type Folder {
   subfolders: [Folder!]!
   createdAt: String!
   updatedAt: String!
+}
+
+union FolderResult = FolderSuccess | FolderError
+union NoteResult = NoteSuccess | NoteError
+union DeleteResult = DeleteSuccess | DeleteError
+
+type FolderSuccess {
+  __typename: String!
+  folder: Folder!
+}
+
+type NoteSuccess {
+  __typename: String!
+  note: Note!
+}
+
+type DeleteSuccess {
+  __typename: String!
+  success: Boolean!
+}
+
+type FolderError {
+  __typename: String!
+  error: FolderErrorType!
+}
+
+type NoteError {
+  __typename: String!
+  error: NoteErrorType!
+}
+
+type DeleteError {
+  __typename: String!
+  error: DeleteErrorType!
+}
+
+enum FolderErrorType {
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+  DUPLICATE_NAME
+}
+
+enum NoteErrorType {
+  INVALID_ID
+  NOT_FOUND
+  VALIDATION_ERROR
+  DUPLICATE_TITLE
+}
+
+enum DeleteErrorType {
+  INVALID_ID
+  NOT_FOUND
 }
