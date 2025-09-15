@@ -1,5 +1,5 @@
-import { GraphQLResolveInfo } from 'graphql';
-import { FolderMapper, NoteMapper } from './schema.mappers';
+import type { GraphQLResolveInfo } from 'graphql';
+import type { FolderMapper, NoteMapper } from './schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
