@@ -32,22 +32,25 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       }
     }
 
-    // Если меняем имя
+    let trimmedName: string | undefined;
     if (typeof name !== 'undefined') {
-        const trimmed = name != null ? name.trim() : '';
-      if (trimmed.length === 0) {
+      trimmedName = name != null ? name.trim() : '';
+      if (trimmedName.length === 0) {
         return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
       }
-      // Проверка на дубликат имени в рамках одного родителя
-      const duplicate = await Folder.findOne({
+      folder.name = trimmedName;
+    }
+
+    if (typeof parentId !== 'undefined' || typeof name !== 'undefined') {
+      const effectiveName = typeof trimmedName === 'string' ? trimmedName : folder.name;
+      const duplicateOnTargetLevel = await Folder.findOne({
         id: { $ne: folder.id },
-        name: trimmed,
-        parent: folder.parent != null ? folder.parent : null
+        name: effectiveName,
+        parent: folder.parent !== null ? folder.parent : null,
       });
-      if (duplicate) {
+      if (duplicateOnTargetLevel) {
         return { __typename: 'FolderError', error: 'DUPLICATE_NAME' };
       }
-      folder.name = trimmed;
     }
 
     await folder.save();
