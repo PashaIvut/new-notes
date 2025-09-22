@@ -1,13 +1,10 @@
-// src/schema/resolvers/Note.ts
-import type { NoteResolvers } from './../types.generated';
-import { Folder } from '../../db';
-import { mapFolderToGraphQL } from '../../utils/mappers';
+import type { NoteResolvers } from '../types.generated';
+import { Folder as FolderModel } from '../../db';
 
 export const Note: NoteResolvers = {
-  folder: async (parent) => {
-    if (!parent.folderId) return null;
-    
-    const folder = await Folder.findById(parent.folderId);
-    return folder ? mapFolderToGraphQL(folder) : null;
-  }
+  id: p => String(p.id ?? p._id),
+  folderId: p => (p.folder ? p.folder.toString() : null),
+  createdAt: p => p.createdAt.toISOString(),
+  updatedAt: p => p.updatedAt.toISOString(),
+  folder: (p) => (p.folder ? FolderModel.findById(p.folder) : null),
 };

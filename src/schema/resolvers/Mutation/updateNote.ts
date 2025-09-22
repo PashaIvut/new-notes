@@ -1,6 +1,5 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Note, Folder } from '../../../db';
-import { mapNoteToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_parent, { id, title, content, folderId }, _ctx) => {
@@ -53,7 +52,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
 
     return {
       __typename: 'NoteSuccess',
-      note: mapNoteToGraphQL(note)
+      note
     };
   } catch (error) {
     return { __typename: 'NoteError', error: 'VALIDATION_ERROR' };

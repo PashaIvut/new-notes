@@ -1,7 +1,6 @@
 // src/schema/resolvers/Mutation/createNote.ts
 import type { MutationResolvers } from './../../types.generated';
 import { Note, Folder } from '../../../db';
-import { mapNoteToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const createNote: NonNullable<MutationResolvers['createNote']> = async (_parent, {title, content, folderId}, _ctx) => {
@@ -52,7 +51,7 @@ export const createNote: NonNullable<MutationResolvers['createNote']> = async (_
     
     return {
       __typename: 'NoteSuccess',
-      note: mapNoteToGraphQL(newNote)
+      note: newNote
     };
   } catch (error) {
     return {

@@ -1,7 +1,6 @@
 // src/schema/resolvers/Mutation/createFolder.ts
 import type { MutationResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
-import { mapFolderToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const createFolder: NonNullable<MutationResolvers['createFolder']> = async (_parent, {name, parentId}, _ctx) => {
@@ -34,7 +33,7 @@ export const createFolder: NonNullable<MutationResolvers['createFolder']> = asyn
     
     return {
       __typename: 'FolderSuccess',
-      folder: mapFolderToGraphQL(newFolder)
+      folder: newFolder
     };
   } catch (error) {
     return {

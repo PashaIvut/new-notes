@@ -1,17 +1,5 @@
-export interface FolderMapper {
-    id: string;
-    name: string;
-    parentId?: string | null; 
-    createdAt: string;
-    updatedAt: string;
-  }
+import type { IFolder } from '../models/Folder'
+import type { INote } from '../models/Note'
 
-  export interface NoteMapper {
-    id: string;
-    title: string;
-    content?: string | null;
-    folderId?: string | null; 
-    createdAt: string;
-    updatedAt: string;
-  }
-  
+export type FolderMapper = IFolder
+export type NoteMapper = INote

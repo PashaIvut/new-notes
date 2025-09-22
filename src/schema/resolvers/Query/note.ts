@@ -1,7 +1,5 @@
-// src/schema/resolvers/Query/note.ts
 import type { QueryResolvers } from './../../types.generated';
 import { Note } from '../../../db';
-import { mapNoteToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const note: NonNullable<QueryResolvers['note']> = async (_parent, { id }, _ctx) => {
@@ -12,9 +10,9 @@ export const note: NonNullable<QueryResolvers['note']> = async (_parent, { id },
     };
   }
   
-  const note = await Note.findById(id);
+  const noteFound = await Note.findById(id);
   
-  if (!note) {
+  if (!noteFound) {
     return {
       __typename: 'NoteError',
       error: 'NOT_FOUND'
@@ -23,6 +21,6 @@ export const note: NonNullable<QueryResolvers['note']> = async (_parent, { id },
   
   return {
     __typename: 'NoteSuccess',
-    note: mapNoteToGraphQL(note)
+    note: noteFound
   };
 };

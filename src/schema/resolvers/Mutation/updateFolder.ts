@@ -1,6 +1,5 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
-import { mapFolderToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = async (_parent, { id, name, parentId }, _ctx) => {
@@ -57,7 +56,7 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
 
     return {
       __typename: 'FolderSuccess',
-      folder: mapFolderToGraphQL(folder)
+      folder
     };
   } catch (error) {
     return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };

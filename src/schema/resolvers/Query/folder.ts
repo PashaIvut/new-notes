@@ -1,7 +1,5 @@
-// src/schema/resolvers/Query/folder.ts
 import type { QueryResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
-import { mapFolderToGraphQL } from '../../../utils/mappers';
 import mongoose from 'mongoose';
 
 export const folder: NonNullable<QueryResolvers['folder']> = async (_parent, { id }, _ctx) => {
@@ -12,9 +10,9 @@ export const folder: NonNullable<QueryResolvers['folder']> = async (_parent, { i
     };
   }
   
-  const folder = await Folder.findById(id);
+  const folderFound = await Folder.findById(id);
   
-  if (!folder) {
+  if (!folderFound) {
     return {
       __typename: 'FolderError',
       error: 'NOT_FOUND'
@@ -23,6 +21,6 @@ export const folder: NonNullable<QueryResolvers['folder']> = async (_parent, { i
   
   return {
     __typename: 'FolderSuccess',
-    folder: mapFolderToGraphQL(folder)
+    folder: folderFound
   };
 };
