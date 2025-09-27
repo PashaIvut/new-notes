@@ -13,7 +13,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
       return { __typename: 'NoteError', error: 'NOT_FOUND' };
     }
 
-    if (typeof folderId !== 'undefined') {
+    if (folderId !== 'undefined') {
       if (folderId === null) {
         note.folder = null;
       } else {

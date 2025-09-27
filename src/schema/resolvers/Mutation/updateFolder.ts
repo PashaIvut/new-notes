@@ -13,7 +13,7 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       return { __typename: 'FolderError', error: 'NOT_FOUND' };
     }
 
-    if (typeof parentId !== 'undefined') {
+    if (parentId !== null) {
       if (parentId === null) {
         folder.parent = null;
       } else {
@@ -31,16 +31,13 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       }
     }
 
-    let trimmedName: string | undefined;
-    if (typeof name !== 'undefined') {
-      trimmedName = name != null ? name.trim() : '';
-      if (trimmedName.length === 0) {
-        return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
-      }
-      folder.name = trimmedName;
+    const trimmedName = name?.trim() ?? ''
+    if (!trimmedName) {
+      return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
     }
+    folder.name = trimmedName;
 
-    if (typeof parentId !== 'undefined' || typeof name !== 'undefined') {
+    if ( parentId !== 'undefined' || name !== 'undefined') {
       const effectiveName = typeof trimmedName === 'string' ? trimmedName : folder.name;
       const duplicateOnTargetLevel = await Folder.findOne({
         id: { $ne: folder.id },
