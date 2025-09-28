@@ -23,8 +23,16 @@ export const deleteFolder: NonNullable<MutationResolvers['deleteFolder']> = asyn
       queue.push(child.id);
     }
   }
-  await Note.deleteMany({ folder: { $in: idsToDelete } });
-  await Folder.deleteMany({ _id: { $in: idsToDelete } });
+
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      await Note.deleteMany({ folder: { $in: idsToDelete } }, { session });
+      await Folder.deleteMany({ _id: { $in: idsToDelete } }, { session });
+    });
+  } finally {
+    await session.endSession();
+  }
 
   return {
     __typename: 'DeleteSuccess',
