@@ -13,7 +13,8 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       return { __typename: 'FolderError', error: 'NOT_FOUND' };
     }
 
-    if (parentId !== null) {
+    // Update parentId only if provided (guard clause style)
+    if (parentId !== undefined) {
       if (parentId === null) {
         folder.parent = null;
       } else {
@@ -31,22 +32,35 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       }
     }
 
-    const trimmedName = name?.trim() ?? ''
-    if (!trimmedName) {
-      return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
-    }
-    folder.name = trimmedName;
-
-    if ( parentId !== 'undefined' || name !== 'undefined') {
-      const effectiveName = typeof trimmedName === 'string' ? trimmedName : folder.name;
-      const duplicateOnTargetLevel = await Folder.findOne({
-        id: { $ne: folder.id },
-        name: effectiveName,
-        parent: folder.parent !== null ? folder.parent : null,
-      });
-      if (duplicateOnTargetLevel) {
-        return { __typename: 'FolderError', error: 'DUPLICATE_NAME' };
+    // Update name only if provided (guard clause style)
+    let effectiveNameForDuplicateCheck = folder.name;
+    if (name !== undefined) {
+      const trimmedName = name?.trim() ?? ''
+      if (!trimmedName) {
+        return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
       }
+      folder.name = trimmedName;
+      effectiveNameForDuplicateCheck = trimmedName;
+    }
+
+    // Early return if nothing to update
+    if (name === undefined && parentId === undefined) {
+      await folder.save();
+      return {
+        __typename: 'FolderSuccess',
+        folder
+      };
+    }
+
+    // Check duplicates only when name or parent might have changed
+    const effectiveName = effectiveNameForDuplicateCheck;
+    const duplicateOnTargetLevel = await Folder.findOne({
+      _id: { $ne: folder._id },
+      name: effectiveName,
+      parent: folder.parent !== null ? folder.parent : null,
+    });
+    if (duplicateOnTargetLevel) {
+      return { __typename: 'FolderError', error: 'DUPLICATE_NAME' };
     }
 
     await folder.save();
