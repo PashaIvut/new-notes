@@ -4,59 +4,52 @@ import { Note, Folder } from '../../../db';
 import mongoose from 'mongoose';
 
 export const createNote: NonNullable<MutationResolvers['createNote']> = async (_parent, {title, content, folderId}, _ctx) => {
-  try {
-    if (!title || title.trim().length === 0) {
-      return {
-        __typename: 'NoteError',
-        error: 'VALIDATION_ERROR'
-      };
-    }
-    
-    if (folderId) {
-      if (!mongoose.Types.ObjectId.isValid(folderId)) {
-        return {
-          __typename: 'NoteError',
-          error: 'INVALID_ID'
-        };
-      }
-      
-      const folder = await Folder.findById(folderId);
-      if (!folder) {
-        return {
-          __typename: 'NoteError',
-          error: 'NOT_FOUND'
-        };
-      }
-    }
-
-    const existingNote = await Note.findOne({
-      title: title.trim(),
-      folder: folderId || null
-    });
-    
-    if (existingNote) {
-      return {
-        __typename: 'NoteError',
-        error: 'DUPLICATE_TITLE'
-      };
-    }
-    
-    const newNote = new Note({
-      title: title.trim(),
-      content: content || null,
-      folder: folderId ? new mongoose.Types.ObjectId(folderId) : null
-    });
-    
-    await newNote.save();
-    
-    return {
-      __typename: 'NoteSuccess',
-      note: newNote
-    };
-  } catch (error) {
+  if (!title || title.trim().length === 0) {
     return {
       __typename: 'NoteError',
       error: 'VALIDATION_ERROR'
     };
   }
+  
+  if (folderId) {
+    if (!mongoose.Types.ObjectId.isValid(folderId)) {
+      return {
+        __typename: 'NoteError',
+        error: 'INVALID_ID'
+      };
+    }
+    
+    const folder = await Folder.findById(folderId);
+    if (!folder) {
+      return {
+        __typename: 'NoteError',
+        error: 'NOT_FOUND'
+      };
+    }
+  }
+
+  const existingNote = await Note.findOne({
+    title: title.trim(),
+    folder: folderId || null
+  });
+  
+  if (existingNote) {
+    return {
+      __typename: 'NoteError',
+      error: 'DUPLICATE_TITLE'
+    };
+  }
+  
+  const newNote = new Note({
+    title: title.trim(),
+    content: content || null,
+    folder: folderId ? new mongoose.Types.ObjectId(folderId) : null
+  });
+  
+  await newNote.save();
+  
+  return {
+    __typename: 'NoteSuccess',
+    note: newNote
+  };
 };
