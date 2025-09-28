@@ -13,7 +13,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
       return { __typename: 'NoteError', error: 'NOT_FOUND' };
     }
 
-    if (folderId !== 'undefined') {
+    if (typeof folderId !== 'undefined') {
       if (folderId === null) {
         note.folder = null;
       } else {
@@ -28,8 +28,8 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
       }
     }
 
-    if (typeof title !== 'undefined') {
-      const trimmed = title != null ? title.trim() : '';
+    if (title !== 'undefined') {
+      const trimmed = title?.trim() ?? '';
       if (trimmed.length === 0) {
         return { __typename: 'NoteError', error: 'VALIDATION_ERROR' };
       }
@@ -44,8 +44,8 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
       note.title = trimmed;
     }
 
-    if (typeof content !== 'undefined') {
-      note.content = content != null ? content : null;
+    if (content !== 'undefined') {
+      note.content = content ?? null;
     }
 
     await note.save();
