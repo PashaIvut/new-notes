@@ -2,13 +2,11 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
 import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const createFolder: NonNullable<MutationResolvers['createFolder']> = async (_parent, {name, parentId}, _ctx) => {
   if (!name || name.trim().length === 0) {
-    return {
-      __typename: 'FolderError',
-      error: 'VALIDATION_ERROR'
-    };
+    throw new GraphQLError('Name is required');
   }
   
   const existingFolder = await Folder.findOne({

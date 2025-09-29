@@ -1,10 +1,11 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
 import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = async (_parent, { id, name, parentId }, _ctx) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return { __typename: 'FolderError', error: 'INVALID_ID' };
+    throw new GraphQLError('Invalid folder ID');
   }
 
   const folder = await Folder.findById(id);
@@ -18,10 +19,10 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       folder.parent = null;
     } else {
         if (!mongoose.Types.ObjectId.isValid(parentId)) {
-          return { __typename: 'FolderError', error: 'INVALID_ID' };
+          throw new GraphQLError('Invalid parent folder ID');
         }
         if (parentId === id) {
-          return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
+          throw new GraphQLError('Folder cannot be its own parent');
         }
         const newParent = await Folder.findById(parentId);
         if (!newParent) {
@@ -36,7 +37,7 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
   if (name !== undefined) {
     const trimmedName = name?.trim() ?? ''
     if (!trimmedName) {
-      return { __typename: 'FolderError', error: 'VALIDATION_ERROR' };
+      throw new GraphQLError('Name is required');
     }
     folder.name = trimmedName;
     effectiveNameForDuplicateCheck = trimmedName;

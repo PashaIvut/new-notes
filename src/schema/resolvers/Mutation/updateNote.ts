@@ -1,10 +1,11 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Note, Folder } from '../../../db';
 import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_parent, { id, title, content, folderId }, _ctx) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return { __typename: 'NoteError', error: 'INVALID_ID' };
+    throw new GraphQLError('Invalid note ID');
   }
 
   const note = await Note.findById(id);
@@ -17,7 +18,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
       note.folder = null;
     } else {
         if (!mongoose.Types.ObjectId.isValid(folderId)) {
-          return { __typename: 'NoteError', error: 'INVALID_ID' };
+          throw new GraphQLError('Invalid folder ID');
         }
         const folder = await Folder.findById(folderId);
         if (!folder) {
@@ -30,7 +31,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
   if (title !== 'undefined') {
     const trimmed = title?.trim() ?? '';
     if (trimmed.length === 0) {
-      return { __typename: 'NoteError', error: 'VALIDATION_ERROR' };
+      throw new GraphQLError('Title is required');
     }
     const duplicate = await Note.findOne({
       _id: { $ne: note._id },

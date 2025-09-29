@@ -1,10 +1,11 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Note } from '../../../db';
 import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const deleteNote: NonNullable<MutationResolvers['deleteNote']> = async (_parent, { id }, _ctx) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return { __typename: 'DeleteError', error: 'INVALID_ID' };
+    throw new GraphQLError('Invalid note ID');
   }
 
   const note = await Note.findById(id);

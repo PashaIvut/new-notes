@@ -2,21 +2,16 @@
 import type { MutationResolvers } from './../../types.generated';
 import { Note, Folder } from '../../../db';
 import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const createNote: NonNullable<MutationResolvers['createNote']> = async (_parent, {title, content, folderId}, _ctx) => {
   if (!title || title.trim().length === 0) {
-    return {
-      __typename: 'NoteError',
-      error: 'VALIDATION_ERROR'
-    };
+    throw new GraphQLError('Title is required');
   }
   
   if (folderId) {
     if (!mongoose.Types.ObjectId.isValid(folderId)) {
-      return {
-        __typename: 'NoteError',
-        error: 'INVALID_ID'
-      };
+      throw new GraphQLError('Invalid folder ID');
     }
     
     const folder = await Folder.findById(folderId);
