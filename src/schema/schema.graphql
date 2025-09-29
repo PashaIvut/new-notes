@@ -1,17 +1,19 @@
+scalar ObjectId
+
 type Query {
   notes: [Note!]!
-  note(id: ID!): NoteResult
+  note(id: ObjectId!): NoteResult
   folders: [Folder!]!
-  folder(id: ID!): FolderResult
+  folder(id: ObjectId!): FolderResult
 }
 
 type Mutation {
-  createNote(title: String!, content: String, folderId: ID): NoteResult!
-  updateNote(id: ID!, title: String, content: String, folderId: ID): NoteResult
-  deleteNote(id: ID!): DeleteResult!
-  createFolder(name: String!, parentId: ID): FolderResult!
-  updateFolder(id: ID!, name: String, parentId: ID): FolderResult
-  deleteFolder(id: ID!): DeleteResult!
+  createNote(title: String!, content: String, folderId: ObjectId): NoteResult!
+  updateNote(id: ObjectId!, title: String, content: String, folderId: ObjectId): NoteResult
+  deleteNote(id: ObjectId!): DeleteResult!
+  createFolder(name: String!, parentId: ObjectId): FolderResult!
+  updateFolder(id: ObjectId!, name: String, parentId: ObjectId): FolderResult
+  deleteFolder(id: ObjectId!): DeleteResult!
 }
 
 # ===== UNION TYPES =====
@@ -67,20 +69,20 @@ enum DeleteErrorType {
 
 
 type Note {
-  id: ID!
+  id: ObjectId!
   title: String!
   content: String
   folder: Folder
-  folderId: ID
+  folderId: ObjectId
   createdAt: String!
   updatedAt: String!
 }
 
 type Folder {
-  id: ID!
+  id: ObjectId!
   name: String!
   parent: Folder
-  parentId: ID
+  parentId: ObjectId
   notes: [Note!]!
   subfolders: [Folder!]!
   createdAt: String!

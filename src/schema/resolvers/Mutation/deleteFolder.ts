@@ -4,10 +4,6 @@ import mongoose from 'mongoose';
 import { GraphQLError } from 'graphql';
 
 export const deleteFolder: NonNullable<MutationResolvers['deleteFolder']> = async (_parent, { id }, _ctx) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new GraphQLError('Invalid folder ID');
-  }
-
   const root = await Folder.findById(id);
   if (!root) {
     return { __typename: 'DeleteError', error: 'NOT_FOUND' };

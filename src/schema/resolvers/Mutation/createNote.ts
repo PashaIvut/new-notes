@@ -10,10 +10,6 @@ export const createNote: NonNullable<MutationResolvers['createNote']> = async (_
   }
   
   if (folderId) {
-    if (!mongoose.Types.ObjectId.isValid(folderId)) {
-      throw new GraphQLError('Invalid folder ID');
-    }
-    
     const folder = await Folder.findById(folderId);
     if (!folder) {
       return {

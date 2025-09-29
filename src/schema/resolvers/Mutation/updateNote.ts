@@ -4,10 +4,6 @@ import mongoose from 'mongoose';
 import { GraphQLError } from 'graphql';
 
 export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_parent, { id, title, content, folderId }, _ctx) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new GraphQLError('Invalid note ID');
-  }
-
   const note = await Note.findById(id);
   if (!note) {
     return { __typename: 'NoteError', error: 'NOT_FOUND' };
@@ -17,9 +13,6 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
     if (folderId === null) {
       note.folder = null;
     } else {
-        if (!mongoose.Types.ObjectId.isValid(folderId)) {
-          throw new GraphQLError('Invalid folder ID');
-        }
         const folder = await Folder.findById(folderId);
         if (!folder) {
           return { __typename: 'NoteError', error: 'NOT_FOUND' };

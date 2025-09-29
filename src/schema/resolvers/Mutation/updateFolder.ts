@@ -4,10 +4,6 @@ import mongoose from 'mongoose';
 import { GraphQLError } from 'graphql';
 
 export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = async (_parent, { id, name, parentId }, _ctx) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new GraphQLError('Invalid folder ID');
-  }
-
   const folder = await Folder.findById(id);
   if (!folder) {
     return { __typename: 'FolderError', error: 'NOT_FOUND' };
@@ -18,9 +14,6 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
     if (parentId === null) {
       folder.parent = null;
     } else {
-        if (!mongoose.Types.ObjectId.isValid(parentId)) {
-          throw new GraphQLError('Invalid parent folder ID');
-        }
         if (parentId === id) {
           throw new GraphQLError('Folder cannot be its own parent');
         }

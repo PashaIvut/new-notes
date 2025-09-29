@@ -15,11 +15,11 @@ type DeleteSuccess {
 
 type Folder {
   createdAt: String!
-  id: ID!
+  id: ObjectId!
   name: String!
   notes: [Note!]!
   parent: Folder
-  parentId: ID
+  parentId: ObjectId
   subfolders: [Folder!]!
   updatedAt: String!
 }
@@ -42,20 +42,20 @@ type FolderSuccess {
 }
 
 type Mutation {
-  createFolder(name: String!, parentId: ID): FolderResult!
-  createNote(content: String, folderId: ID, title: String!): NoteResult!
-  deleteFolder(id: ID!): DeleteResult!
-  deleteNote(id: ID!): DeleteResult!
-  updateFolder(id: ID!, name: String, parentId: ID): FolderResult
-  updateNote(content: String, folderId: ID, id: ID!, title: String): NoteResult
+  createFolder(name: String!, parentId: ObjectId): FolderResult!
+  createNote(content: String, folderId: ObjectId, title: String!): NoteResult!
+  deleteFolder(id: ObjectId!): DeleteResult!
+  deleteNote(id: ObjectId!): DeleteResult!
+  updateFolder(id: ObjectId!, name: String, parentId: ObjectId): FolderResult
+  updateNote(content: String, folderId: ObjectId, id: ObjectId!, title: String): NoteResult
 }
 
 type Note {
   content: String
   createdAt: String!
   folder: Folder
-  folderId: ID
-  id: ID!
+  folderId: ObjectId
+  id: ObjectId!
   title: String!
   updatedAt: String!
 }
@@ -77,9 +77,11 @@ type NoteSuccess {
   note: Note!
 }
 
+scalar ObjectId
+
 type Query {
-  folder(id: ID!): FolderResult
+  folder(id: ObjectId!): FolderResult
   folders: [Folder!]!
-  note(id: ID!): NoteResult
+  note(id: ObjectId!): NoteResult
   notes: [Note!]!
 }

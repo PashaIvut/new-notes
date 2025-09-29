@@ -1,5 +1,5 @@
-import type { GraphQLResolveInfo } from 'graphql';
-import type { FolderMapper, NoteMapper } from './schema.mappers';
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import { FolderMapper, NoteMapper } from './schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -12,11 +12,12 @@ export type EnumResolverSignature<T, AllowedValues = any> = { [key in keyof T]?:
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string | number; }
+  ID: { input: string; output: string; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  ObjectId: { input: any; output: any; }
 };
 
 export type DeleteError = {
@@ -38,11 +39,11 @@ export type DeleteSuccess = {
 export type Folder = {
   __typename?: 'Folder';
   createdAt: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['ObjectId']['output'];
   name: Scalars['String']['output'];
   notes: Array<Note>;
   parent?: Maybe<Folder>;
-  parentId?: Maybe<Scalars['ID']['output']>;
+  parentId?: Maybe<Scalars['ObjectId']['output']>;
   subfolders: Array<Folder>;
   updatedAt: Scalars['String']['output'];
 };
@@ -78,38 +79,38 @@ export type Mutation = {
 
 export type MutationcreateFolderArgs = {
   name: Scalars['String']['input'];
-  parentId?: InputMaybe<Scalars['ID']['input']>;
+  parentId?: InputMaybe<Scalars['ObjectId']['input']>;
 };
 
 
 export type MutationcreateNoteArgs = {
   content?: InputMaybe<Scalars['String']['input']>;
-  folderId?: InputMaybe<Scalars['ID']['input']>;
+  folderId?: InputMaybe<Scalars['ObjectId']['input']>;
   title: Scalars['String']['input'];
 };
 
 
 export type MutationdeleteFolderArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['ObjectId']['input'];
 };
 
 
 export type MutationdeleteNoteArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['ObjectId']['input'];
 };
 
 
 export type MutationupdateFolderArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['ObjectId']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['ID']['input']>;
+  parentId?: InputMaybe<Scalars['ObjectId']['input']>;
 };
 
 
 export type MutationupdateNoteArgs = {
   content?: InputMaybe<Scalars['String']['input']>;
-  folderId?: InputMaybe<Scalars['ID']['input']>;
-  id: Scalars['ID']['input'];
+  folderId?: InputMaybe<Scalars['ObjectId']['input']>;
+  id: Scalars['ObjectId']['input'];
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -118,8 +119,8 @@ export type Note = {
   content?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   folder?: Maybe<Folder>;
-  folderId?: Maybe<Scalars['ID']['output']>;
-  id: Scalars['ID']['output'];
+  folderId?: Maybe<Scalars['ObjectId']['output']>;
+  id: Scalars['ObjectId']['output'];
   title: Scalars['String']['output'];
   updatedAt: Scalars['String']['output'];
 };
@@ -152,12 +153,12 @@ export type Query = {
 
 
 export type QueryfolderArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['ObjectId']['input'];
 };
 
 
 export type QuerynoteArgs = {
-  id: Scalars['ID']['input'];
+  id: Scalars['ObjectId']['input'];
 };
 
 
@@ -244,7 +245,6 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Folder: ResolverTypeWrapper<FolderMapper>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   FolderError: ResolverTypeWrapper<Omit<FolderError, 'error'> & { error: ResolversTypes['FolderErrorType'] }>;
   FolderErrorType: ResolverTypeWrapper<'INVALID_ID' | 'NOT_FOUND' | 'VALIDATION_ERROR' | 'DUPLICATE_NAME'>;
   FolderResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['FolderResult']>;
@@ -255,6 +255,7 @@ export type ResolversTypes = {
   NoteErrorType: ResolverTypeWrapper<'INVALID_ID' | 'NOT_FOUND' | 'VALIDATION_ERROR' | 'DUPLICATE_TITLE'>;
   NoteResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NoteResult']>;
   NoteSuccess: ResolverTypeWrapper<Omit<NoteSuccess, 'note'> & { note: ResolversTypes['Note'] }>;
+  ObjectId: ResolverTypeWrapper<Scalars['ObjectId']['output']>;
   Query: ResolverTypeWrapper<{}>;
 };
 
@@ -266,7 +267,6 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Folder: FolderMapper;
   String: Scalars['String']['output'];
-  ID: Scalars['ID']['output'];
   FolderError: FolderError;
   FolderResult: ResolversUnionTypes<ResolversParentTypes>['FolderResult'];
   FolderSuccess: Omit<FolderSuccess, 'folder'> & { folder: ResolversParentTypes['Folder'] };
@@ -275,6 +275,7 @@ export type ResolversParentTypes = {
   NoteError: NoteError;
   NoteResult: ResolversUnionTypes<ResolversParentTypes>['NoteResult'];
   NoteSuccess: Omit<NoteSuccess, 'note'> & { note: ResolversParentTypes['Note'] };
+  ObjectId: Scalars['ObjectId']['output'];
   Query: {};
 };
 
@@ -296,11 +297,11 @@ export type DeleteSuccessResolvers<ContextType = any, ParentType extends Resolve
 
 export type FolderResolvers<ContextType = any, ParentType extends ResolversParentTypes['Folder'] = ResolversParentTypes['Folder']> = {
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ObjectId'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   notes?: Resolver<Array<ResolversTypes['Note']>, ParentType, ContextType>;
   parent?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType>;
-  parentId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  parentId?: Resolver<Maybe<ResolversTypes['ObjectId']>, ParentType, ContextType>;
   subfolders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -335,8 +336,8 @@ export type NoteResolvers<ContextType = any, ParentType extends ResolversParentT
   content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   folder?: Resolver<Maybe<ResolversTypes['Folder']>, ParentType, ContextType>;
-  folderId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  folderId?: Resolver<Maybe<ResolversTypes['ObjectId']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ObjectId'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -357,6 +358,10 @@ export type NoteSuccessResolvers<ContextType = any, ParentType extends Resolvers
   note?: Resolver<ResolversTypes['Note'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface ObjectIdScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['ObjectId'], any> {
+  name: 'ObjectId';
+}
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   folder?: Resolver<Maybe<ResolversTypes['FolderResult']>, ParentType, ContextType, RequireFields<QueryfolderArgs, 'id'>>;
@@ -381,6 +386,7 @@ export type Resolvers<ContextType = any> = {
   NoteErrorType?: NoteErrorTypeResolvers;
   NoteResult?: NoteResultResolvers<ContextType>;
   NoteSuccess?: NoteSuccessResolvers<ContextType>;
+  ObjectId?: GraphQLScalarType;
   Query?: QueryResolvers<ContextType>;
 };
 
