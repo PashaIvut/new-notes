@@ -3,7 +3,7 @@ scalar ObjectId
 type Query {
   notes: [Note!]!
   note(id: ObjectId!): NoteResult
-  folders: [Folder!]!
+  folders(first: Int, after: ObjectId): FoldersConnection!
   folder(id: ObjectId!): FolderResult
 }
 
@@ -87,4 +87,22 @@ type Folder {
   subfolders: [Folder!]!
   createdAt: String!
   updatedAt: String!
+}
+
+# ===== PAGINATION TYPES =====
+type FoldersConnection {
+  edges: [FolderEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FolderEdge {
+  node: Folder!
+  cursor: ObjectId!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: ObjectId
+  endCursor: ObjectId
 }
