@@ -1,4 +1,3 @@
-// src/schema/resolvers/Mutation/createNote.ts
 import type { MutationResolvers } from './../../types.generated';
 import { Note, Folder } from '../../../db';
 import mongoose from 'mongoose';

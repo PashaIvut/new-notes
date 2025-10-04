@@ -24,14 +24,14 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       }
   }
 
-  let effectiveNameForDuplicateCheck = folder.name;
+  let nameForDuplicateCheck = folder.name;
   if (name !== undefined) {
-    const trimmedName = name?.trim() ?? ''
+    const trimmedName = name?.trim() ?? '';
     if (!trimmedName) {
       throw new GraphQLError('Name is required');
     }
     folder.name = trimmedName;
-    effectiveNameForDuplicateCheck = trimmedName;
+    nameForDuplicateCheck = trimmedName;
   }
 
   if (name === undefined && parentId === undefined) {
@@ -42,10 +42,9 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
     };
   }
 
-  const effectiveName = effectiveNameForDuplicateCheck;
   const duplicateOnTargetLevel = await Folder.findOne({
     _id: { $ne: folder._id },
-    name: effectiveName,
+    name: nameForDuplicateCheck,
     parent: folder.parent !== null ? folder.parent : null,
   });
   if (duplicateOnTargetLevel) {

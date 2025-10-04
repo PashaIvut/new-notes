@@ -1,4 +1,3 @@
-// src/schema/resolvers/Mutation/createFolder.ts
 import type { MutationResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
 import mongoose from 'mongoose';
