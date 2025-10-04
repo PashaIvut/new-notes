@@ -1,10 +1,16 @@
 import type { QueryResolvers } from './../../types.generated';
 import { Folder } from '../../../db';
+import mongoose from 'mongoose';
+import { GraphQLError } from 'graphql';
 
 export const folders: NonNullable<QueryResolvers['folders']> = async (_parent, args, _ctx) => {
   const { first, after } = args;
   
   const pageSize = first && first > 0 ? first : 10;
+  
+  if (after && !mongoose.Types.ObjectId.isValid(after)) {
+    throw new GraphQLError('Invalid cursor');
+  }
   
   let query = {};
   
