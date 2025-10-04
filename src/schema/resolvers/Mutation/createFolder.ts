@@ -9,8 +9,10 @@ export const createFolder: NonNullable<MutationResolvers['createFolder']> = asyn
     throw new GraphQLError('Name is required');
   }
   
+  const trimmedName = name.trim();
+  
   const existingFolder = await Folder.findOne({
-    name: name.trim(),
+    name: trimmedName,
     parent: parentId || null
   });
   
@@ -22,7 +24,7 @@ export const createFolder: NonNullable<MutationResolvers['createFolder']> = asyn
   }
   
   const newFolder = new Folder({
-    name: name.trim(),
+    name: trimmedName,
     parent: parentId ? new mongoose.Types.ObjectId(parentId) : null
   });
   

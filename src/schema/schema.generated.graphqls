@@ -24,6 +24,11 @@ type Folder {
   updatedAt: String!
 }
 
+type FolderEdge {
+  cursor: ObjectId!
+  node: Folder!
+}
+
 type FolderError {
   error: FolderErrorType!
 }
@@ -39,6 +44,11 @@ union FolderResult = FolderError | FolderSuccess
 
 type FolderSuccess {
   folder: Folder!
+}
+
+type FoldersConnection {
+  edges: [FolderEdge!]!
+  pageInfo: PageInfo!
 }
 
 type Mutation {
@@ -79,9 +89,16 @@ type NoteSuccess {
 
 scalar ObjectId
 
+type PageInfo {
+  endCursor: ObjectId
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: ObjectId
+}
+
 type Query {
   folder(id: ObjectId!): FolderResult
-  folders: [Folder!]!
+  folders(after: ObjectId, first: Int): FoldersConnection!
   note(id: ObjectId!): NoteResult
   notes: [Note!]!
 }

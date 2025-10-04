@@ -9,23 +9,24 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
     return { __typename: 'NoteError', error: 'NOT_FOUND' };
   }
 
-  if (typeof folderId !== 'undefined') {
+  if (folderId !== undefined) {
     if (folderId === null) {
       note.folder = null;
     } else {
-        const folder = await Folder.findById(folderId);
-        if (!folder) {
-          return { __typename: 'NoteError', error: 'NOT_FOUND' };
-        }
-        note.folder = new mongoose.Types.ObjectId(folderId);
+      const folder = await Folder.findById(folderId);
+      if (!folder) {
+        return { __typename: 'NoteError', error: 'NOT_FOUND' };
+      }
+      note.folder = new mongoose.Types.ObjectId(folderId);
     }
   }
 
-  if (title !== 'undefined') {
+  if (title !== undefined) {
     const trimmed = title?.trim() ?? '';
     if (trimmed.length === 0) {
       throw new GraphQLError('Title is required');
     }
+    
     const duplicate = await Note.findOne({
       _id: { $ne: note._id },
       title: trimmed,
@@ -37,7 +38,7 @@ export const updateNote: NonNullable<MutationResolvers['updateNote']> = async (_
     note.title = trimmed;
   }
 
-  if (content !== 'undefined') {
+  if (content !== undefined) {
     note.content = content ?? null;
   }
 

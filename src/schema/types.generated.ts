@@ -1,5 +1,5 @@
-import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
-import { FolderMapper, NoteMapper } from './schema.mappers';
+import type { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
+import type { FolderMapper, NoteMapper } from './schema.mappers';
 export type Maybe<T> = T | null | undefined;
 export type InputMaybe<T> = T | null | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -48,6 +48,12 @@ export type Folder = {
   updatedAt: Scalars['String']['output'];
 };
 
+export type FolderEdge = {
+  __typename?: 'FolderEdge';
+  cursor: Scalars['ObjectId']['output'];
+  node: Folder;
+};
+
 export type FolderError = {
   __typename?: 'FolderError';
   error: FolderErrorType;
@@ -64,6 +70,12 @@ export type FolderResult = FolderError | FolderSuccess;
 export type FolderSuccess = {
   __typename?: 'FolderSuccess';
   folder: Folder;
+};
+
+export type FoldersConnection = {
+  __typename?: 'FoldersConnection';
+  edges: Array<FolderEdge>;
+  pageInfo: PageInfo;
 };
 
 export type Mutation = {
@@ -143,10 +155,18 @@ export type NoteSuccess = {
   note: Note;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['ObjectId']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor?: Maybe<Scalars['ObjectId']['output']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   folder?: Maybe<FolderResult>;
-  folders: Array<Folder>;
+  folders: FoldersConnection;
   note?: Maybe<NoteResult>;
   notes: Array<Note>;
 };
@@ -154,6 +174,12 @@ export type Query = {
 
 export type QueryfolderArgs = {
   id: Scalars['ObjectId']['input'];
+};
+
+
+export type QueryfoldersArgs = {
+  after?: InputMaybe<Scalars['ObjectId']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -245,10 +271,12 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Folder: ResolverTypeWrapper<FolderMapper>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  FolderEdge: ResolverTypeWrapper<Omit<FolderEdge, 'node'> & { node: ResolversTypes['Folder'] }>;
   FolderError: ResolverTypeWrapper<Omit<FolderError, 'error'> & { error: ResolversTypes['FolderErrorType'] }>;
   FolderErrorType: ResolverTypeWrapper<'INVALID_ID' | 'NOT_FOUND' | 'VALIDATION_ERROR' | 'DUPLICATE_NAME'>;
   FolderResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['FolderResult']>;
   FolderSuccess: ResolverTypeWrapper<Omit<FolderSuccess, 'folder'> & { folder: ResolversTypes['Folder'] }>;
+  FoldersConnection: ResolverTypeWrapper<Omit<FoldersConnection, 'edges'> & { edges: Array<ResolversTypes['FolderEdge']> }>;
   Mutation: ResolverTypeWrapper<{}>;
   Note: ResolverTypeWrapper<NoteMapper>;
   NoteError: ResolverTypeWrapper<Omit<NoteError, 'error'> & { error: ResolversTypes['NoteErrorType'] }>;
@@ -256,7 +284,9 @@ export type ResolversTypes = {
   NoteResult: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['NoteResult']>;
   NoteSuccess: ResolverTypeWrapper<Omit<NoteSuccess, 'note'> & { note: ResolversTypes['Note'] }>;
   ObjectId: ResolverTypeWrapper<Scalars['ObjectId']['output']>;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
   Query: ResolverTypeWrapper<{}>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
@@ -267,16 +297,20 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Folder: FolderMapper;
   String: Scalars['String']['output'];
+  FolderEdge: Omit<FolderEdge, 'node'> & { node: ResolversParentTypes['Folder'] };
   FolderError: FolderError;
   FolderResult: ResolversUnionTypes<ResolversParentTypes>['FolderResult'];
   FolderSuccess: Omit<FolderSuccess, 'folder'> & { folder: ResolversParentTypes['Folder'] };
+  FoldersConnection: Omit<FoldersConnection, 'edges'> & { edges: Array<ResolversParentTypes['FolderEdge']> };
   Mutation: {};
   Note: NoteMapper;
   NoteError: NoteError;
   NoteResult: ResolversUnionTypes<ResolversParentTypes>['NoteResult'];
   NoteSuccess: Omit<NoteSuccess, 'note'> & { note: ResolversParentTypes['Note'] };
   ObjectId: Scalars['ObjectId']['output'];
+  PageInfo: PageInfo;
   Query: {};
+  Int: Scalars['Int']['output'];
 };
 
 export type DeleteErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteError'] = ResolversParentTypes['DeleteError']> = {
@@ -307,6 +341,12 @@ export type FolderResolvers<ContextType = any, ParentType extends ResolversParen
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FolderEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderEdge'] = ResolversParentTypes['FolderEdge']> = {
+  cursor?: Resolver<ResolversTypes['ObjectId'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Folder'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type FolderErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderError'] = ResolversParentTypes['FolderError']> = {
   error?: Resolver<ResolversTypes['FolderErrorType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -320,6 +360,12 @@ export type FolderResultResolvers<ContextType = any, ParentType extends Resolver
 
 export type FolderSuccessResolvers<ContextType = any, ParentType extends ResolversParentTypes['FolderSuccess'] = ResolversParentTypes['FolderSuccess']> = {
   folder?: Resolver<ResolversTypes['Folder'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FoldersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FoldersConnection'] = ResolversParentTypes['FoldersConnection']> = {
+  edges?: Resolver<Array<ResolversTypes['FolderEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -363,9 +409,17 @@ export interface ObjectIdScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'ObjectId';
 }
 
+export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
+  endCursor?: Resolver<Maybe<ResolversTypes['ObjectId']>, ParentType, ContextType>;
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  hasPreviousPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  startCursor?: Resolver<Maybe<ResolversTypes['ObjectId']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   folder?: Resolver<Maybe<ResolversTypes['FolderResult']>, ParentType, ContextType, RequireFields<QueryfolderArgs, 'id'>>;
-  folders?: Resolver<Array<ResolversTypes['Folder']>, ParentType, ContextType>;
+  folders?: Resolver<ResolversTypes['FoldersConnection'], ParentType, ContextType, Partial<QueryfoldersArgs>>;
   note?: Resolver<Maybe<ResolversTypes['NoteResult']>, ParentType, ContextType, RequireFields<QuerynoteArgs, 'id'>>;
   notes?: Resolver<Array<ResolversTypes['Note']>, ParentType, ContextType>;
 };
@@ -376,10 +430,12 @@ export type Resolvers<ContextType = any> = {
   DeleteResult?: DeleteResultResolvers<ContextType>;
   DeleteSuccess?: DeleteSuccessResolvers<ContextType>;
   Folder?: FolderResolvers<ContextType>;
+  FolderEdge?: FolderEdgeResolvers<ContextType>;
   FolderError?: FolderErrorResolvers<ContextType>;
   FolderErrorType?: FolderErrorTypeResolvers;
   FolderResult?: FolderResultResolvers<ContextType>;
   FolderSuccess?: FolderSuccessResolvers<ContextType>;
+  FoldersConnection?: FoldersConnectionResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Note?: NoteResolvers<ContextType>;
   NoteError?: NoteErrorResolvers<ContextType>;
@@ -387,6 +443,7 @@ export type Resolvers<ContextType = any> = {
   NoteResult?: NoteResultResolvers<ContextType>;
   NoteSuccess?: NoteSuccessResolvers<ContextType>;
   ObjectId?: GraphQLScalarType;
+  PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 };
 

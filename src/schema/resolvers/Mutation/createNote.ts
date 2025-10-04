@@ -9,6 +9,8 @@ export const createNote: NonNullable<MutationResolvers['createNote']> = async (_
     throw new GraphQLError('Title is required');
   }
   
+  const trimmedTitle = title.trim();
+  
   if (folderId) {
     const folder = await Folder.findById(folderId);
     if (!folder) {
@@ -20,7 +22,7 @@ export const createNote: NonNullable<MutationResolvers['createNote']> = async (_
   }
 
   const existingNote = await Note.findOne({
-    title: title.trim(),
+    title: trimmedTitle,
     folder: folderId || null
   });
   
@@ -32,7 +34,7 @@ export const createNote: NonNullable<MutationResolvers['createNote']> = async (_
   }
   
   const newNote = new Note({
-    title: title.trim(),
+    title: trimmedTitle,
     content: content || null,
     folder: folderId ? new mongoose.Types.ObjectId(folderId) : null
   });

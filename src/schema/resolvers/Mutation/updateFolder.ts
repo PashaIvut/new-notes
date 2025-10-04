@@ -9,7 +9,6 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
     return { __typename: 'FolderError', error: 'NOT_FOUND' };
   }
 
-  // Меняем id родителя только если он предоставлен
   if (parentId !== undefined) {
     if (parentId === null) {
       folder.parent = null;
@@ -25,7 +24,6 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
       }
   }
 
-  // Меняем имя только если оно предоставлено 
   let effectiveNameForDuplicateCheck = folder.name;
   if (name !== undefined) {
     const trimmedName = name?.trim() ?? ''
@@ -36,7 +34,6 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
     effectiveNameForDuplicateCheck = trimmedName;
   }
 
-  // Ранний выход если ничего не поменялось
   if (name === undefined && parentId === undefined) {
     await folder.save();
     return {
@@ -45,7 +42,6 @@ export const updateFolder: NonNullable<MutationResolvers['updateFolder']> = asyn
     };
   }
 
-  // Проверяем дубликаты только тогда, когда имя или родитель поменялись
   const effectiveName = effectiveNameForDuplicateCheck;
   const duplicateOnTargetLevel = await Folder.findOne({
     _id: { $ne: folder._id },
